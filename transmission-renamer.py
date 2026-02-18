@@ -75,7 +75,7 @@ def parse_name(filename: str):
 
     # HDR
     hdr = ""
-    if re.search(r'HDR|HDR10|Dolby.?Vision|DV', name, re.IGNORECASE):
+    if re.search(r'HDR|HDR10|Dolby.?Vision|DoVi|DV', name, re.IGNORECASE):
         hdr = " HDR"
 
     # Construcción final (siempre con extensión porque ya validamos antes)
