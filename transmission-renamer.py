@@ -33,8 +33,13 @@ def parse_name(filename: str):
         # No tiene extensión, retornar None
         return None
 
-    # Buscar año (puede estar entre paréntesis o no)
-    year_match = re.search(r'\(?(19|20)\d{2}\)?', name)
+    # Buscar año - priorizar años entre paréntesis
+    year_match = re.search(r'\((19|20)\d{2}\)', name)
+
+    # Si no hay año entre paréntesis, buscar año suelto
+    if not year_match:
+        year_match = re.search(r'[\s._-](19|20)\d{2}[\s._-]', name)
+
     if not year_match:
         return None
 
@@ -72,6 +77,9 @@ def parse_name(filename: str):
             resolution = "720p"
         elif re.search(r'480[pi]', name, re.IGNORECASE):
             resolution = "480p"
+        else:
+            # Si no se detecta resolución, usar 1080p por defecto
+            resolution = "1080p"
 
     # HDR
     hdr = ""
@@ -79,11 +87,8 @@ def parse_name(filename: str):
         hdr = " HDR"
 
     # Construcción final (siempre con extensión porque ya validamos antes)
-    if resolution:
-        result = f"{title} ({year}) - {resolution}{hdr}.{ext}"
-    else:
-        # Si no hay resolución, no poner el guión
-        result = f"{title} ({year}){hdr}.{ext}" if hdr else f"{title} ({year}).{ext}"
+    # Ahora siempre hay resolución (por defecto 1080p)
+    result = f"{title} ({year}) - {resolution}{hdr}.{ext}"
 
     return result
 
